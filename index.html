@@ -1,0 +1,169 @@
+<!-- Calculadora de Huella de Carbono -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Huella de Carbono</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            margin-top: 20px;
+        }
+        label, input {
+            display: block;
+            margin: 10px 0;
+        }
+        button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #resultado, #recomendaciones {
+            font-size: 18px;
+            margin-top: 20px;
+            color: #34495e;
+        }
+        canvas {
+            max-width: 400px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calculadora de Huella de Carbono</h1>
+    <form id="carbonForm">
+        <label for="electricidad">Consumo mensual de electricidad (kWh):</label>
+        <input type="number" id="electricidad" required>
+        
+        <label for="transporte">Kilómetros recorridos en coche por mes:</label>
+        <input type="number" id="transporte" required>
+        
+        <button type="button" onclick="calcularHuella()">Calcular</button>
+    </form>
+    <p id="resultado"></p>
+    <p id="recomendaciones"></p>
+    
+    <script>
+        function calcularHuella() {
+            let electricidad = document.getElementById('electricidad').value;
+            let transporte = document.getElementById('transporte').value;
+            
+            if (!electricidad || !transporte) {
+                alert("Por favor, ingresa todos los valores.");
+                return;
+            }
+            
+            electricidad = electricidad * 0.5;
+            transporte = transporte * 0.2;
+            let total = electricidad + transporte;
+            
+            document.getElementById('resultado').innerText = `Tu huella de carbono estimada es de ${total} kg CO₂/mes.`;
+            document.getElementById('recomendaciones').innerText = generarRecomendaciones(total);
+        }
+        
+        function generarRecomendaciones(huella) {
+            if (huella < 50) {
+                return "¡Bien hecho! Tu huella de carbono es baja. Sigue usando energías renovables y transportes sostenibles.";
+            } else if (huella < 150) {
+                return "Tu huella de carbono es moderada. Considera reducir el uso del coche y mejorar la eficiencia energética en casa.";
+            } else {
+                return "Tu huella de carbono es alta. Te recomendamos usar más transporte público, reducir el consumo eléctrico y optar por fuentes de energía renovable.";
+            }
+        }
+    </script>
+</body>
+</html>
+
+<!-- Monitoreo Energético en Tiempo Real -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoreo Energético</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #ecf0f1;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            color: #2980b9;
+        }
+        #energia-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            margin-top: 20px;
+        }
+        canvas {
+            max-width: 400px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Monitoreo Energético en Tiempo Real</h1>
+    <div id="energia-container">
+        <h2>Consumo Actual: <span id="consumo">0</span> kWh</h2>
+    </div>
+    <canvas id="energiaChart"></canvas>
+    
+    <script>
+        let datosConsumo = [];
+        
+        function actualizarConsumo() {
+            let consumo = (Math.random() * 10 + 5).toFixed(2);
+            document.getElementById('consumo').innerText = consumo;
+            datosConsumo.push(consumo);
+            if (datosConsumo.length > 10) datosConsumo.shift();
+            actualizarGrafico(datosConsumo);
+        }
+        
+        function actualizarGrafico(data) {
+            let ctx = document.getElementById('energiaChart').getContext('2d');
+            if (window.miGraficoEnergia) window.miGraficoEnergia.destroy();
+            window.miGraficoEnergia = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map((_, i) => `T${i + 1}`),
+                    datasets: [{
+                        label: 'Consumo Energético (kWh)',
+                        data: data,
+                        borderColor: '#2980b9',
+                        fill: false
+                    }]
+                }
+            });
+        }
+        
+        setInterval(actualizarConsumo, 3000);
+    </script>
+</body>
+</html>
