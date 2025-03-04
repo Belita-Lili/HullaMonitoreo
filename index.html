@@ -1,12 +1,9 @@
-<!-- Calculadora de Huella de Carbono -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Huella de Carbono</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -38,14 +35,16 @@
             cursor: pointer;
             border-radius: 5px;
         }
-        #resultado, #recomendaciones {
+        #resultado, #recomendaciones, #sugerencias {
             font-size: 18px;
             margin-top: 20px;
             color: #34495e;
         }
-        canvas {
-            max-width: 400px;
-            margin-top: 20px;
+        .sugerencia {
+            background: #e8f5e9;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
         }
     </style>
 </head>
@@ -62,6 +61,7 @@
     </form>
     <p id="resultado"></p>
     <p id="recomendaciones"></p>
+    <div id="sugerencias"></div>
     
     <script>
         function calcularHuella() {
@@ -79,6 +79,7 @@
             
             document.getElementById('resultado').innerText = `Tu huella de carbono estimada es de ${total} kg CO₂/mes.`;
             document.getElementById('recomendaciones').innerText = generarRecomendaciones(total);
+            mostrarSugerencias(electricidad);
         }
         
         function generarRecomendaciones(huella) {
@@ -90,80 +91,40 @@
                 return "Tu huella de carbono es alta. Te recomendamos usar más transporte público, reducir el consumo eléctrico y optar por fuentes de energía renovable.";
             }
         }
-    </script>
-</body>
-</html>
+        
+        function mostrarSugerencias(consumoElectrico) {
+            let sugerencias = document.getElementById('sugerencias');
+            sugerencias.innerHTML = ''; // Limpiar sugerencias anteriores
 
-<!-- Monitoreo Energético en Tiempo Real -->
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitoreo Energético</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #ecf0f1;
-            margin: 0;
-            padding: 0;
+            if (consumoElectrico < 100) {
+                sugerencias.innerHTML += `
+                    <div class="sugerencia">
+                        <h3>Sugerencias para mejorar tu ahorro:</h3>
+                        <p>Considera instalar un sistema fotovoltaico pequeño para cubrir parte de tu consumo.</p>
+                        <p><strong>Módulo recomendado:</strong> Paneles de 250W - 300W (ejemplo: Trina Solar, Jinko Solar).</p>
+                        <p><strong>Inversor recomendado:</strong> Inversor de 1kW - 2kW (ejemplo: Huawei SUN2000, SMA Sunny Boy).</p>
+                    </div>
+                `;
+            } else if (consumoElectrico < 300) {
+                sugerencias.innerHTML += `
+                    <div class="sugerencia">
+                        <h3>Sugerencias para mejorar tu ahorro:</h3>
+                        <p>Un sistema fotovoltaico mediano puede ayudarte a reducir significativamente tu factura eléctrica.</p>
+                        <p><strong>Módulo recomendado:</strong> Paneles de 350W - 400W (ejemplo: LG NeON 2, Canadian Solar).</p>
+                        <p><strong>Inversor recomendado:</strong> Inversor de 3kW - 5kW (ejemplo: Fronius Primo, SolarEdge).</p>
+                    </div>
+                `;
+            } else {
+                sugerencias.innerHTML += `
+                    <div class="sugerencia">
+                        <h3>Sugerencias para mejorar tu ahorro:</h3>
+                        <p>Un sistema fotovoltaico grande puede cubrir la mayor parte de tu consumo y reducir tu huella de carbono.</p>
+                        <p><strong>Módulo recomendado:</strong> Paneles de 450W - 500W (ejemplo: SunPower, REC Alpha).</p>
+                        <p><strong>Inversor recomendado:</strong> Inversor de 6kW - 10kW (ejemplo: SMA Sunny Tripower, ABB UNO-DM).</p>
+                    </div>
+                `;
+            }
         }
-        h1 {
-            color: #2980b9;
-        }
-        #energia-container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            display: inline-block;
-            margin-top: 20px;
-        }
-        canvas {
-            max-width: 400px;
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-    <h1>Monitoreo Energético en Tiempo Real</h1>
-    <div id="energia-container">
-        <h2>Consumo Actual: <span id="consumo">0</span> kWh</h2>
-    </div>
-    <canvas id="energiaChart"></canvas>
-    
-    <script>
-        let datosConsumo = [];
-        
-        function actualizarConsumo() {
-            let consumo = (Math.random() * 10 + 5).toFixed(2);
-            document.getElementById('consumo').innerText = consumo;
-            datosConsumo.push(consumo);
-            if (datosConsumo.length > 10) datosConsumo.shift();
-            actualizarGrafico(datosConsumo);
-        }
-        
-        function actualizarGrafico(data) {
-            let ctx = document.getElementById('energiaChart').getContext('2d');
-            if (window.miGraficoEnergia) window.miGraficoEnergia.destroy();
-            window.miGraficoEnergia = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: data.map((_, i) => `T${i + 1}`),
-                    datasets: [{
-                        label: 'Consumo Energético (kWh)',
-                        data: data,
-                        borderColor: '#2980b9',
-                        fill: false
-                    }]
-                }
-            });
-        }
-        
-        setInterval(actualizarConsumo, 3000);
     </script>
 </body>
 </html>
